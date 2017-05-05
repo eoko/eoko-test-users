@@ -1,3 +1,7 @@
+require('dotenv').config();
+const debug = require('debug')('test.server');
+
+
 // Define libraries
 var express     = require('express');
 var bodyParser  = require('body-parser');
@@ -24,6 +28,7 @@ app.set('views', './app/views');
 app.set('view engine', 'jade');
 
 // Start server
-module.exports = app.listen(3000, function() {
+module.exports = app.listen(process.env.NODE_PORT, function() {
+	debug('server is started');
 	console.log('Server is started');
 });

@@ -9,6 +9,16 @@ function FreelanceController() {
 	var AhttPI = require('../libs/AhttPI');
 	var cache = require('../libs/Cache');
 
+	function renderFreelance(freelance) {
+		return {
+			title: freelance.firstname+' '+freelance.lastname,
+			full_name: freelance.firstname+' '+freelance.lastname,
+			username: freelance.username,
+			position: freelance.position,
+			birth_date: freelance.birth_date
+		}
+	}
+
 	this.get = function(req, res) {
 
 		var proms = [];
@@ -46,19 +56,20 @@ function FreelanceController() {
 
 		})
 			.then((json) => {
-				if(!cache.isExists(json)) {
+				/*
+				if(!cache.isExists(req.params.username)) {
 					cache.addUsername(json);
-				}
-				res.render('details', {
-					title: json.firstname+' '+json.lastname,
-					full_name: json.firstname+' '+json.lastname,
-					username: json.username,
-					position: json.position,
-					birth_date: json.birth_date
-				});
+				}*/
+				res.render('details', renderFreelance(json));
 			})
 			.catch(() => {
-				res.status(500);
+				if(cache.isExists(req.params.username)) {
+					var free = cache.get(req.params.username);
+					res.render('details', renderFreelance(free));
+				}
+				else {
+					res.status(500);
+				}
 			});
 
 		Promise.all(proms)
@@ -69,11 +80,21 @@ function FreelanceController() {
 
 		AhttPI.getContent('/')
 			.then((json) => {
+
 				console.log(json);
 				var jsonObject = JSON.parse(json);
 				for(var i in jsonObject) {
-					// Save
+					var free = jsonObject[i];
+					if(!cache.isExists(free.username)) {
+						cache.addUsername(free);
+					}
 				}
+
+				res.render('index', {
+					title: 'Liste des freelance',
+					list: free
+				});
+
 			})
 			.catch((err) => {
 				console.error(err);

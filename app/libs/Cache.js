@@ -6,6 +6,7 @@ function Cache() {
 
 	var cache_file = 'app/cache/freelances.json';
 	var fs = require('fs');
+	
 
 	function createCache(callback) {
 		fs.open(cache_file,'r',function(err, fd){
