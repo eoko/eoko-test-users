@@ -1,0 +1,8 @@
+{
+  "/": {
+    "get": "FreelanceController#getAll"
+  },
+  "/:username": {
+    "get": "FreelanceController#get"
+  }
+}
