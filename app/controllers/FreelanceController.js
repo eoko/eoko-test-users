@@ -7,6 +7,7 @@
 function FreelanceController() {
 
 	var AhttPI = require('../libs/AhttPI');
+	var cache = require('../libs/Cache');
 
 	this.get = function(req, res) {
 
@@ -28,20 +29,26 @@ function FreelanceController() {
 			);
 		}
 
-		var rootRes = res;
-
 		new Promise((resolve, reject) => {
+
+			setTimeout(function() {
+				if(!isSolved) {
+					reject();
+				}
+			}, 5000);
 
 			var sI = setInterval(function() {
 				if(isSolved) {
-					resolve(jsonContent);
 					clearInterval(sI);
+					resolve(jsonContent);
 				}
 			}, 100);
 
 		})
 			.then((json) => {
-				console.log("end" +json);
+				if(!cache.isExists(json)) {
+					cache.addUsername(json);
+				}
 				res.render('details', {
 					title: json.firstname+' '+json.lastname,
 					full_name: json.firstname+' '+json.lastname,
@@ -49,15 +56,14 @@ function FreelanceController() {
 					position: json.position,
 					birth_date: json.birth_date
 				});
+			})
+			.catch(() => {
+				res.status(500);
 			});
 
 		Promise.all(proms)
-			.then(() => {
-				console.log("End massive sending")
-			})
-			.catch((err) => {
-			});
-	}
+			.then(() =>console.log("End massive sending"));
+	};
 
 	this.getAll = function(req, res) {
 
