@@ -3,10 +3,7 @@ html(lang="fr")
   head
     title!= title
   body
-    h1 full_name
-    h2 username
-    h3 position
-    h4 birth_date
-    - list = passions
-    each name in list
-        p #{name}
+    h1!= full_name
+    h2!= username
+    h3!= position
+    h4!= birth_date
