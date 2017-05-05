@@ -7,17 +7,26 @@
 function FreelanceController() {
 
 	var AhttPI = require('../libs/AhttPI');
+	var cache = require('../libs/Cache');
 
 	this.get = function(req, res) {
-		AhttPI.getContent('/'+req.params.username)
+		var username = req.params.username;
+
+		AhttPI.getContent('/'+username)
 			.then((json) => {
-				var cache = require('../libs/Cache');
 				if(!cache.isExists(json)) {
 					cache.addUsername(json);
+					res.status(200).send(json);
 				}
 			})
 			.catch((err) => {
 				// Return cache data
+				if(cache.isExists(username)) {
+					return res.status(200).send(cache.get(username));
+				}
+				else {
+					return res.status(404);
+				}
 			});
 	}
 

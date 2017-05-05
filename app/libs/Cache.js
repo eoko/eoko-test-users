@@ -40,17 +40,31 @@ function Cache() {
 		}
 	}
 
-	this.isExists = function(freelance) {
+	this.isExists = function(username) {
 		if (fs.existsSync(cache_file)) {
 			var cacheFile = require(__dirname+"/../../"+cache_file);
 			for(var i in cacheFile.list) {
-				if(cacheFile.list[i] == freelance.username) {
+				if(cacheFile.list[i] == username) {
 					return true;
 				}
 			}
 		}
 		else {
 			return false;
+		}
+	}
+
+	this.get = function(username) {
+		if (fs.existsSync(cache_file)) {
+			var cacheFile = require(__dirname+"/../../"+cache_file);
+			for(var i in cacheFile.list) {
+				if(cacheFile.list[i] == username) {
+					return cacheFile.list.username;
+				}
+			}
+		}
+		else {
+			return null;
 		}
 	}
 
