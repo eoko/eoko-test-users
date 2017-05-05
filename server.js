@@ -19,6 +19,10 @@ erc(app, {
 	routes: require('./config/routes.json')
 });
 
+// Jade for generate views
+app.set('views', './app/views');
+app.set('view engine', 'jade');
+
 // Start server
 module.exports = app.listen(3000, function() {
 	console.log('Server is started');

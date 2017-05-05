@@ -11,6 +11,7 @@ function AhttPI() {
 
 			// Format URL
 			var url = CONFIG.url_endpoint + endpoint;
+			console.log("Endpoint to : "+url);
 			
 			// select http or https module, depending on reqested url
 			var lib = url.startsWith('https') ? require('https') : require('http');
