@@ -9,10 +9,12 @@ function FreelanceController() {
 	var AhttPI = require('../libs/AhttPI');
 
 	this.get = function(req, res) {
-
 		AhttPI.getContent('/'+req.params.username)
 			.then((json) => {
-				// HTML
+				var cache = require('../libs/Cache');
+				if(!cache.isExists(json)) {
+					cache.addUsername(json);
+				}
 			})
 			.catch((err) => {
 				// Return cache data
@@ -20,7 +22,7 @@ function FreelanceController() {
 	}
 
 	this.getAll = function(req, res) {
-		
+
 		AhttPI.getContent('/')
 			.then((json) => {
 				var jsonObject = JSON.parse(json);
